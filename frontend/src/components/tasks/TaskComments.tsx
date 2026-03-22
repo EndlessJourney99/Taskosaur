@@ -63,6 +63,7 @@ interface TaskCommentsProps {
   onTaskRefetch?: () => void;
   hasAccess?: boolean;
   setLoading?: (loading: boolean) => void;
+  onImageUpload?: (file: File) => Promise<string>;
 }
 
 interface CommentWithAuthor extends TaskComment {
@@ -287,6 +288,7 @@ export default function TaskComments({
   onTaskRefetch,
   hasAccess = false,
   setLoading,
+  onImageUpload
 }: TaskCommentsProps) {
   const { isAuthenticated } = useAuth();
   const isAuth = isAuthenticated();
@@ -818,6 +820,7 @@ export default function TaskComments({
               height={200}
               colorMode={colorMode}
               disabled={isSubmitting}
+              onImageUpload={onImageUpload}
             />
             <div className="flex justify-end gap-2 mt-2">
               {editingCommentId && (

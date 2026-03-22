@@ -677,7 +677,7 @@ export default function TaskDetailClient({
     }
   };
 
-  const handleDescriptionImageUpload = async (file: File): Promise<string> => {
+  const handleImageUpload = async (file: File): Promise<string> => {
     const attachment = await uploadAttachment(taskId, file);
     const updatedAttachments = await getTaskAttachments(taskId, isAuth);
     setAttachments(updatedAttachments || []);
@@ -1138,7 +1138,7 @@ export default function TaskDetailClient({
                     value={editTaskData.description}
                     onChange={(value) => handleTaskFieldChange("description", value)}
                     editMode={true}
-                    onImageUpload={handleDescriptionImageUpload}
+                    onImageUpload={handleImageUpload}
                   />
                   <div className="flex items-center justify-end gap-4 mt-4">
                     <ActionButton
@@ -1215,6 +1215,7 @@ export default function TaskDetailClient({
                 }}
                 hasAccess={hasAccess}
                 setLoading={setLoadingComments}
+                onImageUpload={handleImageUpload}
               />
             </div>
           </div>

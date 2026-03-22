@@ -27,7 +27,7 @@ When I say "Wrap it up" or "Commit this," switch to the **Git-Sentinel** persona
 - **Session Management**: Always run `./.claude/scripts/taskosaur_auth.sh token` to get a valid Bearer token.
 - **Error Handling**: If an API call returns a `401 Unauthorized`, run `./taskosaur_auth.sh refresh` and retry the call once.
 ### 3. Get list assigned tasks in the project
-- Using above credential to call this API `curl '{API BASE}/tasks?organizationId={organizationId}&workspaceId={workspaceId}&projectId={projectId}&sortBy=createdAt&sortOrder=desc&page=1&limit=20&assigneeIds={assigneeIds}' \
+- Using above credential to call this API `curl '{API BASE}/tasks?organizationId={organizationId}&workspaceId={workspaceId}&projectId={projectId}&sortBy=createdAt&sortOrder=desc&page=1&limit=20&assigneeIds={assigneeIds}&statuses=ea3eba1b-176e-4c0a-87de-1f79f842ef40%2Ca8249a46-562c-4516-93be-d1038fa46ce7%2C1eeb4236-b8f1-4f9c-a835-b687ddd6c36c' \
   -H 'authorization: Bearer {jwt}' \
 - Can read into the task's comments for more detail. In example, if the task being return back because it didn't pass the review round.
 - Store the current processing TASK_ID to the memory or a file to keep track and use it to change status later. Should only store and process 1 TASK_ID at a time.
