@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import Portal from "./Portal";
 import Tooltip from "./ToolTip";
@@ -31,6 +31,7 @@ export function CustomModal({
   overlayOpacity = "dark",
 }: ModalProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const mouseDownTarget = useRef<EventTarget | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -104,7 +105,12 @@ export function CustomModal({
         className={`fixed inset-0 ${zIndex} flex ${position} py-4 ${getOverlayClass()} ${getTransitionClass()} ${
           isVisible ? "opacity-100" : "opacity-0"
         }`}
-        onClick={closeOnOverlayClick ? onClose : undefined}
+        onMouseDown={(e) => { mouseDownTarget.current = e.target; }}
+        onClick={(e) => {
+          if (closeOnOverlayClick && mouseDownTarget.current === e.currentTarget) {
+            onClose();
+          }
+        }}
       >
         <div
           className={`relative ${width} ${height} px-3 max-h-full ${top} ${getTransitionClass()} ${getAnimationClass()} bg-[var(--background)]  shadow-xl flex flex-col pointer-events-auto`}
