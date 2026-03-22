@@ -200,10 +200,16 @@ class PackageAndDependenciesPlugin {
         console.log('[PackageAndDependenciesPlugin] Writing package.json to dist directory...');
         fs.writeFileSync(distPackageJsonPath, JSON.stringify(distPackageJson, null, 2) + '\n');
 
-        // Step 6: Run npm install in dist directory (skip postinstall to avoid prisma generate error)
-        console.log('[PackageAndDependenciesPlugin] Running npm install in dist directory...');
+        // Step 6: Install production deps in dist directory.
+        // Must use npm here (not Bun) because Bun creates absolute symlinks in
+        // node_modules/.bin/. When the dist directory is later copied to a
+        // different path in the production image, those absolute symlinks break.
+        // npm creates relative symlinks that survive the directory move.
+        console.log('[PackageAndDependenciesPlugin] Installing production dependencies in dist directory...');
         console.log('[PackageAndDependenciesPlugin] This may take a few moments...');
-        execSync('npm install --production --no-audit --no-fund --ignore-scripts', {
+        const installCmd = 'npm install --production --no-audit --no-fund --ignore-scripts';
+        console.log(`[PackageAndDependenciesPlugin] Using: ${installCmd}`);
+        execSync(installCmd, {
           cwd: distDir,
           stdio: 'inherit',
         });
