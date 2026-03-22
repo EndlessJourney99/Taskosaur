@@ -101,7 +101,7 @@ export class StorageService {
   async saveFile(
     file: Express.Multer.File,
     folder: string,
-  ): Promise<{ url: string | null; key: string; size: number }> {
+  ): Promise<{ safeFileName: string; url: string | null; key: string; size: number }> {
     // Sanitize folder and fileName to prevent path injection
     const safeFolder = this.sanitizeFolderPath(folder);
     const ext = path.extname(file.originalname) || '';
@@ -112,6 +112,7 @@ export class StorageService {
     if (this.useS3) {
       await this.s3Service.uploadFile(file, key);
       return {
+        safeFileName: safeFileName,
         url: null,
         key,
         size: file.size,
@@ -127,6 +128,7 @@ export class StorageService {
       fs.writeFileSync(filePath, file.buffer);
 
       return {
+        safeFileName: safeFileName,
         url: `/${safeFolder}/${safeFileName}`,
         key: `${safeFolder}/${safeFileName}`,
         size: file.size,

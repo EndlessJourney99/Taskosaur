@@ -137,13 +137,16 @@ export class TaskAttachmentsService implements OnModuleInit {
 
     try {
       // Use StorageService to save file (handles both S3 and local storage)
-      const { url, key, size } = await this.storageService.saveFile(file, `tasks/${taskId}`);
+      const { safeFileName, url, key, size } = await this.storageService.saveFile(
+        file,
+        `tasks/${taskId}`,
+      );
 
       // Create attachment record in database
       const attachment = await this.prisma.taskAttachment.create({
         data: {
           taskId: taskId,
-          fileName: file.originalname,
+          fileName: safeFileName,
           fileSize: size,
           mimeType: file.mimetype,
           url: url, // Will be null for S3, static path for local
